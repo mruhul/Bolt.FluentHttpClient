@@ -35,5 +35,5 @@ inject `IFluentHttpClient` in your class and sample usage below:
 
 Just update you startup configure code as below:
 
-    serviceCollection.AddFluentHttpClient();
+    serviceCollection.AddFluentHttpClient(new FluentHttpClientSetupOptions { EnablePerformanceLog = true });
 
