@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Mohammad Ruhul Amin</Authors>
+    <AssemblyName>Bolt.FluentHttpClient.Abstracts</AssemblyName>
+    <PackageId>Bolt.FluentHttpClient.Abstracts</PackageId>
+    <PackageTags>Bolt.FluentHttpClient.Abstracts;Bolt.FluentHttpClient;FluentHttpClient</PackageTags>
+    <Version>1.0.0-preview</Version>
+  </PropertyGroup>
+
+</Project>
