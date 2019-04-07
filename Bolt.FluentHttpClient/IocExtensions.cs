@@ -6,7 +6,7 @@ using System.Net.Http;
 
 namespace Bolt.FluentHttpClient
 {
-    public class SmartHttpClientSetupOptions
+    public class FluentHttpClientSetupOptions
     {
         public string Name { get; set; } = Constants.HttpClientName;
         public bool EnablePerformanceLog { get; set; } = false;
@@ -14,9 +14,9 @@ namespace Bolt.FluentHttpClient
 
     public static class IocExtensions
     {
-        public static IHttpClientBuilder AddFluentHttpClient(this ServiceCollection sc, SmartHttpClientSetupOptions options = null)
+        public static IHttpClientBuilder AddFluentHttpClient(this ServiceCollection sc, FluentHttpClientSetupOptions options = null)
         {
-            options = options ?? new SmartHttpClientSetupOptions();
+            options = options ?? new FluentHttpClientSetupOptions();
             sc.TryAddSingleton<IHttpMessageSerializer, HttpMessageSerializer>();
             sc.TryAddTransient<IHttpMessageSender>(sp => new HttpMessageSender(sp.GetService<IHttpClientFactory>().CreateClient(options.Name)));
             sc.TryAddTransient<ITypedHttpMessageSender, TypedHttpMessageSender>();
