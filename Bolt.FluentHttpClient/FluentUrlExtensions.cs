@@ -4,7 +4,7 @@
     {
         public static Fluent.ICollectFluentUrlPath ToFluentUrl(this string path)
         {
-            return Fluent.FluentUrl.New().Path(path);
+            return Fluent.FluentUrl.FromUrl(path);
         }
     }
 }

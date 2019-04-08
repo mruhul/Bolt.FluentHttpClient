@@ -19,7 +19,7 @@ namespace Bolt.FluentHttpClient
 
         public async Task Serialize(Stream stream, object value)
         {
-            using (var sw = new StreamWriter(stream, Encoding.UTF8, 1024, true))
+            using (var sw = new StreamWriter(stream, new UTF8Encoding(false), 1024, true))
             using (var jw = new JsonTextWriter(sw) { Formatting = Formatting.None })
             {
                 new JsonSerializer().Serialize(jw, value);

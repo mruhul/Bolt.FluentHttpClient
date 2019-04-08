@@ -44,8 +44,6 @@ namespace Bolt.FluentHttpClient
                             using (var sr = await cnt.ReadAsStreamAsync())
                             {
                                 result.Content = serializer.Deserialize<TContent>(sr);
-
-                                await sr.FlushAsync();
                             }
                         }
                     }

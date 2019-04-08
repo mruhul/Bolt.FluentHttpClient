@@ -22,6 +22,11 @@ namespace Bolt.FluentHttpClient.Fluent
             return new FluentUrl();
         }
 
+        public static ICollectFluentUrlPath FromUrl(string url)
+        {
+            return new FluentUrl().Path(url);
+        }
+
         public IHaveFluentUrlPath Path(string path)
         {
             if (string.IsNullOrWhiteSpace(path)) return this;

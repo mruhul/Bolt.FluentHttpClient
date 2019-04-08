@@ -22,6 +22,6 @@ namespace Bolt.FluentHttpClient.Tests
         }
 
         public IFluentHttpClient Client => _sp.GetRequiredService<IFluentHttpClient>();
-        public IHaveUrl Request(string path) => _sp.GetRequiredService<IFluentHttpClient>().Url($"http://localhost:58252/{path.TrimStart('/')}");
+        public IHaveUrl Request(string path) => _sp.GetRequiredService<IFluentHttpClient>().Url($"http://localhost:50276/{path.TrimStart('/')}");
     }
 }
