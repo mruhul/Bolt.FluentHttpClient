@@ -20,7 +20,7 @@ namespace Bolt.FluentHttpClient
             {
                 using (msg.Content)
                 {
-                    return await _client.SendAsync(msg);
+                    return await _client.SendAsync(msg, HttpCompletionOption.ResponseHeadersRead);
                 }
             }
         }

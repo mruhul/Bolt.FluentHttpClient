@@ -1,4 +1,5 @@
 ﻿using Bolt.FluentHttpClient.Abstracts;
+using Bolt.FluentHttpClient.Abstracts.Fluent;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -29,6 +30,12 @@ namespace Bolt.FluentHttpClient.Fluent
         public IHaveHeaders Header(HttpHeader header)
         {
             _headers.Add(header);
+            return this;
+        }
+
+        public IHaveHeaders Header(string name, string value)
+        {
+            _headers.Add(new HttpHeader { Name = name, Value = value });
             return this;
         }
 
@@ -72,7 +79,7 @@ namespace Bolt.FluentHttpClient.Fluent
                 ContentType = Constants.ContentTypeJson
             };
 
-            return _sender.SendAsync<TInput,TOutput>(msg);
+            return _sender.SendAsync<TInput, TOutput>(msg);
         }
 
         public Task<TypedHttpMessageOutput> PostAsync()

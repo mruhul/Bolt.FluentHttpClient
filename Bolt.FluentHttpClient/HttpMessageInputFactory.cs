@@ -34,6 +34,7 @@ namespace Bolt.FluentHttpClient
             serializer.Serialize(stream, input.Content);
 
             result.Content = new StreamContent(stream, 1024);
+            result.Content.Headers.ContentLength = stream.Length;
             result.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(input.ContentType ?? Constants.ContentTypeJson) { CharSet = Constants.ContentCharset };
 
             return result;

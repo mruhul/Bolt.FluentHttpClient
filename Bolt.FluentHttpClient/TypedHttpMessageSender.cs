@@ -38,9 +38,8 @@ namespace Bolt.FluentHttpClient
         public async Task<TypedHttpMessageOutput> SendAsync<TInput>(TypedHttpMessageInput<TInput> input)
         {
             using (var ms = new MemoryStream())
+            using (var msgInput = HttpMessageInputFactory.Create(input, ms, _serializer))
             {
-                var msgInput = HttpMessageInputFactory.Create(input, ms, _serializer);
-
                 var rsp = await _sender.SendAsync(msgInput);
 
                 return await TypedHttpMessageOutputFactory.Create(rsp);
@@ -50,9 +49,8 @@ namespace Bolt.FluentHttpClient
         public async Task<TypedHttpMessageOutput<TOutput>> SendAsync<TInput, TOutput>(TypedHttpMessageInput<TInput> input)
         {
             using (var ms = new MemoryStream())
+            using (var msgInput = HttpMessageInputFactory.Create(input, ms, _serializer))
             {
-                var msgInput = HttpMessageInputFactory.Create(input, ms, _serializer);
-
                 var rsp = await _sender.SendAsync(msgInput);
 
                 return await TypedHttpMessageOutputFactory.Create<TOutput>(rsp, _serializer);

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bolt.FluentHttpClient.Fluent
+namespace Bolt.FluentHttpClient.Abstracts.Fluent
 {
     public interface IHaveUrl : ICollectHeaders, ICollectRetryCount, ICollectTimeout, ISendMessage
     {
@@ -21,6 +21,7 @@ namespace Bolt.FluentHttpClient.Fluent
     {
         IHaveHeaders Header(params HttpHeader[] headers);
         IHaveHeaders Header(HttpHeader header);
+        IHaveHeaders Header(string name, string value);
         IHaveHeaders Header(IEnumerable<HttpHeader> headers);
     }
 
