@@ -1,4 +1,9 @@
 ﻿using Bolt.FluentHttpClient.Abstracts;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -6,7 +11,7 @@ namespace Bolt.FluentHttpClient
 {
     internal class TypedHttpMessageOutputFactory
     {
-        public static async Task<TypedHttpMessageOutput> Create(HttpResponseMessage rsp)
+        public static async Task<TypedHttpMessageOutput> Create(HttpResponseMessage rsp, IHttpMessageSerializer serializer, IEnumerable<HttpStatusCode> erroCodesToHandle, Action<IHttpOnFailureInput> onFailure)
         {
             using (rsp)
             {
@@ -17,16 +22,16 @@ namespace Bolt.FluentHttpClient
 
                 if (rsp.IsSuccessStatusCode) return result;
 
-                using (rsp.Content)
+                if (rsp.Content != null && onFailure != null)
                 {
-                    result.ErrorContent = await rsp.Content?.ReadAsStringAsync();
+                    await HandleFailure(rsp, serializer, erroCodesToHandle, onFailure);
                 }
 
                 return result;
             }
         }
 
-        public static async Task<TypedHttpMessageOutput<TContent>> Create<TContent>(HttpResponseMessage rsp, IHttpMessageSerializer serializer)
+        public static async Task<TypedHttpMessageOutput<TContent>> Create<TContent>(HttpResponseMessage rsp, IHttpMessageSerializer serializer, IEnumerable<HttpStatusCode> errorStatusCodesToHandle, Action<IHttpOnFailureInput> onFailure)
         {
             using (rsp)
             {
@@ -51,15 +56,40 @@ namespace Bolt.FluentHttpClient
                     return result;
                 }
 
-                if (rsp.Content != null)
+                if (rsp.Content != null && onFailure != null)
                 {
-                    using (rsp.Content)
-                    {
-                        result.ErrorContent = await rsp.Content.ReadAsStringAsync();
-                    }
+                    await HandleFailure(rsp, serializer, errorStatusCodesToHandle, onFailure);
                 }
 
                 return result;
+            }
+        }
+
+        private static async Task HandleFailure(HttpResponseMessage rsp, IHttpMessageSerializer serializer, IEnumerable<HttpStatusCode> erroCodesToHandle, Action<IHttpOnFailureInput> onFailure)
+        {
+            if(erroCodesToHandle == null)
+            {
+                if (rsp.StatusCode != HttpStatusCode.BadRequest) return;
+            }
+            else
+            {
+                if(!erroCodesToHandle.Any(x => x == rsp.StatusCode))
+                {
+                    return;
+                }
+            }
+
+            using (rsp.Content)
+            {
+                using (var stream = await rsp.Content.ReadAsStreamAsync())
+                {
+                    onFailure(new TypedHttpOnFailureInput
+                    {
+                        Serializer = serializer,
+                        Stream = stream,
+                        StatusCode = rsp.StatusCode
+                    });
+                }
             }
         }
     }

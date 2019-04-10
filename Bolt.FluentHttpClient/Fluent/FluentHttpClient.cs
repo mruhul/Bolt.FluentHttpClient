@@ -2,12 +2,13 @@
 using Bolt.FluentHttpClient.Abstracts.Fluent;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Bolt.FluentHttpClient.Fluent
 {
-    public class FluentHttpClient : IFluentHttpClient, IHaveUrl, IHaveHeaders, IHaveRetryCount, IHaveTimeout, ISendMessage
+    public class FluentHttpClient : IFluentHttpClient, IHaveUrl, IHaveOnFailure, IHaveHeaders, IHaveRetryCount, IHaveTimeout, ISendMessage
     {
         private readonly ITypedHttpMessageSender _sender;
 
@@ -15,6 +16,8 @@ namespace Bolt.FluentHttpClient.Fluent
         private int _retry = 0;
         private string _url;
         private readonly List<HttpHeader> _headers = new List<HttpHeader>();
+        private Dictionary<HttpStatusCode, Action<IHttpOnFailureInput>> _statusBasedFailureHandlers;
+        private Action<IHttpOnFailureInput> _genericFailureHandler;
 
         public FluentHttpClient(ITypedHttpMessageSender sender)
         {
@@ -54,116 +57,61 @@ namespace Bolt.FluentHttpClient.Fluent
 
         public Task<TypedHttpMessageOutput<TOutput>> PostAsync<TOutput>()
         {
-            var msg = new TypedHttpMessageInput
-            {
-                Headers = _headers,
-                Method = HttpMethod.Post,
-                RetryCount = _retry,
-                Timeout = _timeout,
-                Url = _url
-            };
+            var msg = BuildInput<TypedHttpMessageInput>(HttpMethod.Post);
 
             return _sender.SendAsync<TOutput>(msg);
         }
 
         public Task<TypedHttpMessageOutput<TOutput>> PostAsync<TInput, TOutput>(TInput input)
         {
-            var msg = new TypedHttpMessageInput<TInput>
-            {
-                Headers = _headers,
-                Method = HttpMethod.Post,
-                RetryCount = _retry,
-                Timeout = _timeout,
-                Url = _url,
-                Content = input,
-                ContentType = Constants.ContentTypeJson
-            };
+            var msg = BuildInput<TypedHttpMessageInput<TInput>>(HttpMethod.Post);
+            msg.Content = input;
+            msg.ContentType = Constants.ContentTypeJson;
 
             return _sender.SendAsync<TInput, TOutput>(msg);
         }
 
         public Task<TypedHttpMessageOutput> PostAsync()
         {
-            var msg = new TypedHttpMessageInput
-            {
-                Headers = _headers,
-                Method = HttpMethod.Post,
-                RetryCount = _retry,
-                Timeout = _timeout,
-                Url = _url
-            };
+            var msg = BuildInput<TypedHttpMessageInput>(HttpMethod.Post);
 
             return _sender.SendAsync(msg);
         }
 
         public Task<TypedHttpMessageOutput<TOutput>> PutAsync<TOutput>()
         {
-            var msg = new TypedHttpMessageInput
-            {
-                Headers = _headers,
-                Method = HttpMethod.Put,
-                RetryCount = _retry,
-                Timeout = _timeout,
-                Url = _url
-            };
+            var msg = BuildInput<TypedHttpMessageInput>(HttpMethod.Put);
 
             return _sender.SendAsync<TOutput>(msg);
         }
 
         public Task<TypedHttpMessageOutput<TOutput>> PutAsync<TInput, TOutput>(TInput input)
         {
-            var msg = new TypedHttpMessageInput<TInput>
-            {
-                Headers = _headers,
-                Method = HttpMethod.Put,
-                RetryCount = _retry,
-                Timeout = _timeout,
-                Url = _url,
-                Content = input,
-                ContentType = Constants.ContentTypeJson
-            };
+            var msg = BuildInput<TypedHttpMessageInput<TInput>>(HttpMethod.Put);
+
+            msg.Content = input;
+            msg.ContentType = Constants.ContentTypeJson;
 
             return _sender.SendAsync<TInput, TOutput>(msg);
         }
 
         public Task<TypedHttpMessageOutput> PutAsync()
         {
-            var msg = new TypedHttpMessageInput
-            {
-                Headers = _headers,
-                Method = HttpMethod.Put,
-                RetryCount = _retry,
-                Timeout = _timeout,
-                Url = _url
-            };
+            var msg = BuildInput<TypedHttpMessageInput>(HttpMethod.Put);
 
             return _sender.SendAsync(msg);
         }
 
         public Task<TypedHttpMessageOutput> DeleteAsync()
         {
-            var msg = new TypedHttpMessageInput
-            {
-                Headers = _headers,
-                Method = HttpMethod.Delete,
-                RetryCount = _retry,
-                Timeout = _timeout,
-                Url = _url
-            };
+            var msg = BuildInput<TypedHttpMessageInput>(HttpMethod.Delete);
 
             return _sender.SendAsync(msg);
         }
 
         public Task<TypedHttpMessageOutput<TOutput>> GetAsync<TOutput>()
         {
-            var msg = new TypedHttpMessageInput
-            {
-                Headers = _headers,
-                Method = HttpMethod.Get,
-                RetryCount = _retry,
-                Timeout = _timeout,
-                Url = _url
-            };
+            var msg = BuildInput<TypedHttpMessageInput>(HttpMethod.Get);
 
             return _sender.SendAsync<TOutput>(msg);
         }
@@ -196,6 +144,61 @@ namespace Bolt.FluentHttpClient.Fluent
         {
             _timeout = TimeSpan.FromSeconds(seconds);
             return this;
+        }
+
+        public IHaveOnFailure OnFailure(Action<IHttpOnFailureInput> handler)
+        {
+            _genericFailureHandler = handler;
+
+            return this;
+        }
+
+        public IHaveOnFailure OnFailure<T>(HttpStatusCode statusCode, Action<T> handler)
+        {
+            if (_statusBasedFailureHandlers == null) _statusBasedFailureHandlers = new Dictionary<HttpStatusCode, Action<IHttpOnFailureInput>>();
+            _statusBasedFailureHandlers[statusCode] = new Action<IHttpOnFailureInput>((input) => {
+                handler(input.Serializer.Deserialize<T>(input.Stream));
+            });
+
+            return this;
+        }
+
+        public IHaveOnFailure OnBadRequest<T>(Action<T> handler)
+        {
+            return OnFailure(HttpStatusCode.BadRequest, handler);
+        }
+
+        private TInput BuildInput<TInput>(HttpMethod method) where TInput : TypedHttpMessageInput, new()
+        {
+            var result = new TInput
+            {
+                Headers = _headers,
+                Method = method,
+                RetryCount = _retry,
+                Timeout = _timeout,
+                Url = _url,
+                ErrorStatusCodesToHandle = _statusBasedFailureHandlers?.Keys
+            };
+
+            if(_genericFailureHandler != null)
+            {
+                result.OnFailure = _genericFailureHandler;
+            }
+            else if(_statusBasedFailureHandlers?.Count > 0)
+            {
+                result.OnFailure = new Action<IHttpOnFailureInput>((input) =>
+                {
+                    foreach(var keyValue in _statusBasedFailureHandlers)
+                    {
+                        if(keyValue.Key == input.StatusCode)
+                        {
+                            keyValue.Value(input);
+                        }
+                    }
+                });
+            }
+
+            return result;
         }
     }
 }

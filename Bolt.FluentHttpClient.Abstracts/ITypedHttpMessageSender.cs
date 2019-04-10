@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -13,6 +14,15 @@ namespace Bolt.FluentHttpClient.Abstracts
         public int RetryCount { get; set; }
         public TimeSpan Timeout { get; set; }
         public List<HttpHeader> Headers { get; set; } = new List<HttpHeader>();
+        public IEnumerable<HttpStatusCode> ErrorStatusCodesToHandle { get; set; }
+        public Action<IHttpOnFailureInput> OnFailure { get; set; }
+    }
+
+    public class TypedHttpOnFailureInput : IHttpOnFailureInput
+    {
+        public HttpStatusCode StatusCode { get; set; }
+        public Stream Stream { get; set; }
+        public IHttpMessageSerializer Serializer { get; set; }
     }
 
     public class TypedHttpMessageInput<TContent> : TypedHttpMessageInput
@@ -26,7 +36,6 @@ namespace Bolt.FluentHttpClient.Abstracts
     {
         public HttpStatusCode StatusCode { get; set; }
         public List<HttpHeader> Headers { get; set; } = new List<HttpHeader>();
-        public string ErrorContent { get; set; }
     }
 
     public class TypedHttpMessageOutput<TContent> : TypedHttpMessageOutput

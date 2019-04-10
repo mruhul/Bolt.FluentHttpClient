@@ -39,11 +39,13 @@ namespace Bolt.FluentHttpClient.Tests
 
             s.StatusCode.ShouldBe(HttpStatusCode.Created);
 
+            var error = string.Empty;
             var addResponse = await _fixture
                 .Client
                 .Url("http://localhost:50276/api/books")
                 .Retry(1)
                 .TimeoutInMilliseconds(500)
+                .OnBadRequest<string>((t) => { error = t; })
                 .PostAsync<Book, Book>(bookinput);
 
             addResponse.StatusCode.ShouldBe(HttpStatusCode.Created);
