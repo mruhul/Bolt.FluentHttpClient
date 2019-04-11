@@ -48,6 +48,25 @@ namespace Bolt.FluentHttpClient.Tests
         }
 
         [Fact]
+        public async Task Post_Should_Read_Error()
+        {
+            ErrorResponse error = null;
+            string failure = string.Empty;
+            var rsp = await _fixture.Request("/api/users")
+                .OnFailure<string>(HttpStatusCode.InternalServerError, str => { failure = str; })
+                .OnBadRequest<ErrorResponse>(err => {
+                    error = err;
+                })
+                .PostAsync<CreateUser, User>(new CreateUser {
+                    DisplayName = "",
+                    Email = "",
+                    Password = ""
+                });
+
+            error.ShouldNotBeNull();
+        }
+
+        [Fact]
         public async Task Put_Should_Update_Book()
         {
             var rsp = await _fixture.Request("/api/books/2")

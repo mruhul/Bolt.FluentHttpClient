@@ -4,15 +4,11 @@ using System.Text;
 
 namespace SampleBooksApi.Contracts
 {
-    public class Error
+    public class ErrorResponse
     {
-        public string Code { get; set; }
-        public string PropertyName { get; set; }
-        public string Message { get; set; }
-    }
-
-    public class ErrorContainer
-    {
-        public IEnumerable<Error> Errors { get; set; }
+        public string Title { get; set; }
+        public string Status { get; set; }
+        public string TraceId { get; set; }
+        public Dictionary<string,string[]> Errors { get; set; }
     }
 }
