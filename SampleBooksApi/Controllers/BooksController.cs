@@ -9,9 +9,26 @@ using SampleBooksApi.Contracts;
 namespace SampleBooksApi.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class BooksController : Controller
     {
         private static readonly ConcurrentDictionary<string, Book> _store = new ConcurrentDictionary<string, Book>();
+
+        public BooksController()
+        {
+            SetUp();
+        }
+
+        private void SetUp()
+        {
+            _store.Clear();
+            _store.TryAdd("1", new Book
+            {
+                Id = "1",
+                Title = "Pragmatic Programmer",
+                Price = 100
+            });
+        }
 
         // GET api/values
         [HttpGet]
@@ -54,10 +71,10 @@ namespace SampleBooksApi.Controllers
             _store.TryRemove(id, out var _);
         }
 
-        [HttpGet("reset")]
+        [HttpPost("reset")]
         public void Reset()
         {
-            _store.Clear();
+            SetUp();
         }
     }
 }
