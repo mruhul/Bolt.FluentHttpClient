@@ -1,5 +1,8 @@
 using SampleBooksApi.Contracts;
 using Shouldly;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -47,23 +50,39 @@ namespace Bolt.FluentHttpClient.Tests
             await Reset();
         }
 
-        [Fact]
-        public async Task Post_Should_Read_Error()
+        [Theory]
+        [ClassData(typeof(TestCreateBookData))]
+        public async Task Post_Should_Read_Error(CreateUser input, HttpStatusCode expectedStatusCode)
         {
             ErrorResponse error = null;
-            string failure = string.Empty;
+            string statusMessage = string.Empty;
             var rsp = await _fixture.Request("/api/users")
-                .OnFailure<string>(HttpStatusCode.InternalServerError, str => { failure = str; })
+                .OnFailureAsync(HttpStatusCode.InternalServerError, async (msg) => {
+                    using (var sr = new StreamReader(msg.Stream))
+                    {
+                        statusMessage = await sr.ReadToEndAsync();
+                    }
+                })
                 .OnBadRequest<ErrorResponse>(err => {
                     error = err;
                 })
-                .PostAsync<CreateUser, User>(new CreateUser {
-                    DisplayName = "",
-                    Email = "",
-                    Password = ""
-                });
+                .PostAsync<CreateUser, User>(input);
 
-            error.ShouldNotBeNull();
+            rsp.StatusCode.ShouldBe(expectedStatusCode);
+
+            if(rsp.StatusCode == HttpStatusCode.BadRequest)
+            {
+                error.ShouldNotBeNull();
+            }
+            else if(rsp.StatusCode == HttpStatusCode.InternalServerError)
+            {
+                statusMessage.ShouldBe("You asked for trouble");
+            }
+            else
+            {
+                rsp.Content.ShouldNotBeNull();
+                rsp.Content.Email = input.Email;
+            }
         }
 
         [Fact]
@@ -99,6 +118,43 @@ namespace Bolt.FluentHttpClient.Tests
                     .PostAsync();
 
             rsp.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        public class TestCreateBookData : IEnumerable<object[]>
+        {
+            private readonly List<object[]> _data = new List<object[]> {
+
+                new object[]
+                {
+                    null,
+                    HttpStatusCode.BadRequest
+                },
+                new object[]
+                {
+                    new CreateUser{ Email = "email", Password = "" },
+                    HttpStatusCode.BadRequest
+                },
+                new object[]
+                {
+                    new CreateUser{ Email = "test@gmail.com", Password = "test", DisplayName = "trouble" },
+                    HttpStatusCode.InternalServerError
+                },
+                new object[]
+                {
+                    new CreateUser{ Email = "test@gmail.com", Password = "test", DisplayName = "ruhul" },
+                    HttpStatusCode.Created
+                }
+            };
+
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                return _data.GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
         }
     }
 }

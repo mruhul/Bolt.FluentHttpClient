@@ -11,7 +11,7 @@ namespace Bolt.FluentHttpClient
 {
     internal class TypedHttpMessageOutputFactory
     {
-        public static async Task<TypedHttpMessageOutput> Create(HttpResponseMessage rsp, IHttpMessageSerializer serializer, IEnumerable<HttpStatusCode> erroCodesToHandle, Action<IHttpOnFailureInput> onFailure)
+        public static async Task<TypedHttpMessageOutput> Create(HttpResponseMessage rsp, IHttpMessageSerializer serializer, IEnumerable<HttpStatusCode> erroCodesToHandle, Func<IHttpOnFailureInput,Task> onFailure)
         {
             using (rsp)
             {
@@ -31,7 +31,7 @@ namespace Bolt.FluentHttpClient
             }
         }
 
-        public static async Task<TypedHttpMessageOutput<TContent>> Create<TContent>(HttpResponseMessage rsp, IHttpMessageSerializer serializer, IEnumerable<HttpStatusCode> errorStatusCodesToHandle, Action<IHttpOnFailureInput> onFailure)
+        public static async Task<TypedHttpMessageOutput<TContent>> Create<TContent>(HttpResponseMessage rsp, IHttpMessageSerializer serializer, IEnumerable<HttpStatusCode> errorStatusCodesToHandle, Func<IHttpOnFailureInput,Task> onFailure)
         {
             using (rsp)
             {
@@ -65,7 +65,7 @@ namespace Bolt.FluentHttpClient
             }
         }
 
-        private static async Task HandleFailure(HttpResponseMessage rsp, IHttpMessageSerializer serializer, IEnumerable<HttpStatusCode> erroCodesToHandle, Action<IHttpOnFailureInput> onFailure)
+        private static async Task HandleFailure(HttpResponseMessage rsp, IHttpMessageSerializer serializer, IEnumerable<HttpStatusCode> erroCodesToHandle, Func<IHttpOnFailureInput,Task> onFailure)
         {
             if(erroCodesToHandle == null)
             {
@@ -83,8 +83,10 @@ namespace Bolt.FluentHttpClient
             {
                 using (var stream = await rsp.Content.ReadAsStreamAsync())
                 {
-                    onFailure(new TypedHttpOnFailureInput
+                    await onFailure(new TypedHttpOnFailureInput
                     {
+                        ContentType = rsp.Content.Headers.ContentType?.MediaType,
+                        ContentLength = rsp.Content.Headers.ContentLength,
                         Serializer = serializer,
                         Stream = stream,
                         StatusCode = rsp.StatusCode

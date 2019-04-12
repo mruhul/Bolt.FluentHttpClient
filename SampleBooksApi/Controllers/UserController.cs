@@ -17,6 +17,11 @@ namespace SampleBooksApi.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]CreateUser input)
         {
+            if(input.DisplayName == "trouble")
+            {
+                return StatusCode(500, "You asked for trouble");
+            }
+
             var id = Guid.NewGuid().ToString();
 
             _store[id] = new User {

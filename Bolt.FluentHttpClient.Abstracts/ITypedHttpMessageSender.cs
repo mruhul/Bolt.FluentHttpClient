@@ -14,14 +14,16 @@ namespace Bolt.FluentHttpClient.Abstracts
         public int RetryCount { get; set; }
         public TimeSpan Timeout { get; set; }
         public List<HttpHeader> Headers { get; set; } = new List<HttpHeader>();
-        public IEnumerable<HttpStatusCode> ErrorStatusCodesToHandle { get; set; }
-        public Action<IHttpOnFailureInput> OnFailure { get; set; }
+        public IEnumerable<HttpStatusCode> StatusCodesToHandleFailure { get; set; }
+        public Func<IHttpOnFailureInput,Task> onFailureAsync { get; set; }
     }
 
     public class TypedHttpOnFailureInput : IHttpOnFailureInput
     {
         public HttpStatusCode StatusCode { get; set; }
         public Stream Stream { get; set; }
+        public string ContentType { get; set; }
+        public long? ContentLength { get; set; }
         public IHttpMessageSerializer Serializer { get; set; }
     }
 

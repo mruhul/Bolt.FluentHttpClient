@@ -23,7 +23,7 @@ namespace Bolt.FluentHttpClient
 
             var rsp = await _sender.SendAsync(msgInput);
 
-            return await TypedHttpMessageOutputFactory.Create(rsp, _serializer, input.ErrorStatusCodesToHandle, input.OnFailure);
+            return await TypedHttpMessageOutputFactory.Create(rsp, _serializer, input.StatusCodesToHandleFailure, input.onFailureAsync);
         }
 
         public async Task<TypedHttpMessageOutput<TOutput>> SendAsync<TOutput>(TypedHttpMessageInput input)
@@ -32,7 +32,7 @@ namespace Bolt.FluentHttpClient
 
             var rsp = await _sender.SendAsync(msgInput);
 
-            return await TypedHttpMessageOutputFactory.Create<TOutput>(rsp, _serializer, input.ErrorStatusCodesToHandle, input.OnFailure);
+            return await TypedHttpMessageOutputFactory.Create<TOutput>(rsp, _serializer, input.StatusCodesToHandleFailure, input.onFailureAsync);
         }
 
         public async Task<TypedHttpMessageOutput> SendAsync<TInput>(TypedHttpMessageInput<TInput> input)
@@ -42,7 +42,7 @@ namespace Bolt.FluentHttpClient
             {
                 var rsp = await _sender.SendAsync(msgInput);
 
-                return await TypedHttpMessageOutputFactory.Create(rsp, _serializer, input.ErrorStatusCodesToHandle, input.OnFailure);
+                return await TypedHttpMessageOutputFactory.Create(rsp, _serializer, input.StatusCodesToHandleFailure, input.onFailureAsync);
             }
         }
 
@@ -53,7 +53,7 @@ namespace Bolt.FluentHttpClient
             {
                 var rsp = await _sender.SendAsync(msgInput);
 
-                return await TypedHttpMessageOutputFactory.Create<TOutput>(rsp, _serializer, input.ErrorStatusCodesToHandle, input.OnFailure);
+                return await TypedHttpMessageOutputFactory.Create<TOutput>(rsp, _serializer, input.StatusCodesToHandleFailure, input.onFailureAsync);
             }
         }
     }

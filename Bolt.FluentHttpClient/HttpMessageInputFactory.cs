@@ -1,6 +1,7 @@
 ﻿using Bolt.FluentHttpClient.Abstracts;
 using System.IO;
 using System.Net.Http;
+using System.Text;
 
 namespace Bolt.FluentHttpClient
 {
@@ -29,7 +30,11 @@ namespace Bolt.FluentHttpClient
             result.Timeout = input.Timeout;
             result.Url = input.Url;
 
-            if (input.Content == null) return result;
+            if (input.Content == null)
+            {
+                result.Content = new StringContent(string.Empty, Encoding.UTF8, input.ContentType ?? Constants.ContentTypeJson);
+                return result;
+            };
 
             serializer.Serialize(stream, input.Content);
 

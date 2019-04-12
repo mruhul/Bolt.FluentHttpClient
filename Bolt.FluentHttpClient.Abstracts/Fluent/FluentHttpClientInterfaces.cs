@@ -55,15 +55,17 @@ namespace Bolt.FluentHttpClient.Abstracts.Fluent
 
     public interface IHaveOnFailure : ISendMessage
     {
-        IHaveOnFailure OnFailure<T>(HttpStatusCode statusCode, Action<T> handler);
-        IHaveOnFailure OnBadRequest<T>(Action<T> handler);
+        IHaveOnFailure OnFailureAsync(HttpStatusCode statusCode, Func<IHttpOnFailureInput,Task> handlerAsync);
+        IHaveOnFailure OnFailure<T>(HttpStatusCode statusCode, Action<T> handlerAsync);
+        IHaveOnFailure OnBadRequest<T>(Action<T> handlerAsync);
     }
 
     public interface ICollectOnFailure
     {
-        IHaveOnFailure OnFailure(Action<IHttpOnFailureInput> handler);
-        IHaveOnFailure OnFailure<T>(HttpStatusCode statusCode, Action<T> handler);
-        IHaveOnFailure OnBadRequest<T>(Action<T> handler);
+        IHaveOnFailure OnFailureAsync(Func<IHttpOnFailureInput,Task> handler);
+        IHaveOnFailure OnFailureAsync(HttpStatusCode statusCode, Func<IHttpOnFailureInput, Task> handlerAsync);
+        IHaveOnFailure OnFailure<T>(HttpStatusCode statusCode, Action<T> handlerAsync);
+        IHaveOnFailure OnBadRequest<T>(Action<T> handlerAsync);
     }
 
     public interface ISendMessage
@@ -79,5 +81,10 @@ namespace Bolt.FluentHttpClient.Abstracts.Fluent
         Task<TypedHttpMessageOutput> DeleteAsync();
         Task<TypedHttpMessageOutput> PostAsync();
         Task<TypedHttpMessageOutput> PutAsync();
+    }
+
+    public struct ErrorContentAsString
+    {
+        public string Value { get; set; }
     }
 }

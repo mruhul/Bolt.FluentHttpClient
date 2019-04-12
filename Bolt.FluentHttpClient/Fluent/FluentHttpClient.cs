@@ -2,6 +2,7 @@
 using Bolt.FluentHttpClient.Abstracts.Fluent;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,8 +17,8 @@ namespace Bolt.FluentHttpClient.Fluent
         private int _retry = 0;
         private string _url;
         private readonly List<HttpHeader> _headers = new List<HttpHeader>();
-        private Dictionary<HttpStatusCode, Action<IHttpOnFailureInput>> _statusBasedFailureHandlers;
-        private Action<IHttpOnFailureInput> _genericFailureHandler;
+        private Dictionary<HttpStatusCode, Func<IHttpOnFailureInput,Task>> _statusBasedFailureHandlers;
+        private Func<IHttpOnFailureInput,Task> _genericFailureHandler;
 
         public FluentHttpClient(ITypedHttpMessageSender sender)
         {
@@ -146,18 +147,27 @@ namespace Bolt.FluentHttpClient.Fluent
             return this;
         }
 
-        public IHaveOnFailure OnFailure(Action<IHttpOnFailureInput> handler)
+        public IHaveOnFailure OnFailureAsync(Func<IHttpOnFailureInput,Task> handlerAsync)
         {
-            _genericFailureHandler = handler;
+            _genericFailureHandler = handlerAsync;
 
+            return this;
+        }
+
+        public IHaveOnFailure OnFailureAsync(HttpStatusCode statusCode, Func<IHttpOnFailureInput,Task> handlerAsync)
+        {
+            if (_statusBasedFailureHandlers == null) _statusBasedFailureHandlers = new Dictionary<HttpStatusCode, Func<IHttpOnFailureInput,Task>>();
+            _statusBasedFailureHandlers[statusCode] = handlerAsync;
             return this;
         }
 
         public IHaveOnFailure OnFailure<T>(HttpStatusCode statusCode, Action<T> handler)
         {
-            if (_statusBasedFailureHandlers == null) _statusBasedFailureHandlers = new Dictionary<HttpStatusCode, Action<IHttpOnFailureInput>>();
-            _statusBasedFailureHandlers[statusCode] = new Action<IHttpOnFailureInput>((input) => {
+            if (_statusBasedFailureHandlers == null) _statusBasedFailureHandlers = new Dictionary<HttpStatusCode, Func<IHttpOnFailureInput,Task>>();
+            _statusBasedFailureHandlers[statusCode] = new Func<IHttpOnFailureInput,Task>((input) => 
+            {
                 handler(input.Serializer.Deserialize<T>(input.Stream));
+                return Task.CompletedTask;
             });
 
             return this;
@@ -177,24 +187,26 @@ namespace Bolt.FluentHttpClient.Fluent
                 RetryCount = _retry,
                 Timeout = _timeout,
                 Url = _url,
-                ErrorStatusCodesToHandle = _statusBasedFailureHandlers?.Keys
+                StatusCodesToHandleFailure = _statusBasedFailureHandlers?.Keys
             };
 
             if(_genericFailureHandler != null)
             {
-                result.OnFailure = _genericFailureHandler;
+                result.onFailureAsync = _genericFailureHandler;
             }
             else if(_statusBasedFailureHandlers?.Count > 0)
             {
-                result.OnFailure = new Action<IHttpOnFailureInput>((input) =>
+                result.onFailureAsync = new Func<IHttpOnFailureInput, Task>((input) =>
                 {
                     foreach(var keyValue in _statusBasedFailureHandlers)
                     {
                         if(keyValue.Key == input.StatusCode)
                         {
-                            keyValue.Value(input);
+                            return keyValue.Value(input);
                         }
                     }
+
+                    return Task.CompletedTask;
                 });
             }
 
