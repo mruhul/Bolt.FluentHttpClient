@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace Bolt.FluentHttpClient.Fluent
 {
-    public class FluentHttpClient : IFluentHttpClient, IHaveUrl, IHaveOnFailure, IHaveHeaders, IHaveRetryCount, IHaveTimeout, ISendMessage
+    public class FluentHttpClient : IFluentHttpClient, 
+        IHaveUrl, IHaveOnFailure, IHaveStatusBasedOnFailure, IHaveOnBadRequest, IHaveHeaders, IHaveRetryCount, IHaveTimeout, ISendMessage
     {
         private readonly ITypedHttpMessageSender _sender;
 
@@ -154,14 +155,14 @@ namespace Bolt.FluentHttpClient.Fluent
             return this;
         }
 
-        public IHaveOnFailure OnFailureAsync(HttpStatusCode statusCode, Func<IHttpOnFailureInput,Task> handlerAsync)
+        public IHaveStatusBasedOnFailure OnFailureAsync(HttpStatusCode statusCode, Func<IHttpOnFailureInput,Task> handlerAsync)
         {
             if (_statusBasedFailureHandlers == null) _statusBasedFailureHandlers = new Dictionary<HttpStatusCode, Func<IHttpOnFailureInput,Task>>();
             _statusBasedFailureHandlers[statusCode] = handlerAsync;
             return this;
         }
 
-        public IHaveOnFailure OnFailure<T>(HttpStatusCode statusCode, Action<T> handler)
+        public IHaveStatusBasedOnFailure OnFailure<T>(HttpStatusCode statusCode, Action<T> handler)
         {
             if (_statusBasedFailureHandlers == null) _statusBasedFailureHandlers = new Dictionary<HttpStatusCode, Func<IHttpOnFailureInput,Task>>();
             _statusBasedFailureHandlers[statusCode] = new Func<IHttpOnFailureInput,Task>((input) => 
@@ -173,9 +174,11 @@ namespace Bolt.FluentHttpClient.Fluent
             return this;
         }
 
-        public IHaveOnFailure OnBadRequest<T>(Action<T> handler)
+        public IHaveOnBadRequest OnBadRequest<T>(Action<T> handler)
         {
-            return OnFailure(HttpStatusCode.BadRequest, handler);
+            OnFailure(HttpStatusCode.BadRequest, handler);
+
+            return this;
         }
 
         private TInput BuildInput<TInput>(HttpMethod method) where TInput : TypedHttpMessageInput, new()

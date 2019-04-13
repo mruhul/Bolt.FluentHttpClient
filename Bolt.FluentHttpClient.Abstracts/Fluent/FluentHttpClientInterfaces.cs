@@ -7,7 +7,14 @@ using System.Threading.Tasks;
 
 namespace Bolt.FluentHttpClient.Abstracts.Fluent
 {
-    public interface IHaveUrl : ICollectHeaders, ICollectRetryCount, ICollectTimeout, ICollectOnFailure, ISendMessage
+    public interface IHaveUrl : 
+        ICollectHeaders, 
+        ICollectRetryCount, 
+        ICollectTimeout, 
+        ICollectOnFailure, 
+        ICollectOnBadRequest, 
+        ICollectionStatusBasedOnFailure, 
+        ISendMessage
     {
 
     }
@@ -26,7 +33,12 @@ namespace Bolt.FluentHttpClient.Abstracts.Fluent
         IHaveHeaders Header(IEnumerable<HttpHeader> headers);
     }
 
-    public interface IHaveHeaders : ICollectRetryCount, ICollectTimeout, ICollectOnFailure, ISendMessage
+    public interface IHaveHeaders : 
+        ICollectRetryCount, 
+        ICollectTimeout,
+        ICollectOnFailure,
+        ICollectOnBadRequest,
+        ICollectionStatusBasedOnFailure, ISendMessage
     {
 
     }
@@ -36,7 +48,13 @@ namespace Bolt.FluentHttpClient.Abstracts.Fluent
     {
         IHaveRetryCount Retry(int count);
     }
-    public interface IHaveRetryCount : ICollectTimeout, ICollectOnFailure, ISendMessage
+
+    public interface IHaveRetryCount : 
+        ICollectTimeout, 
+        ICollectionStatusBasedOnFailure, 
+        ICollectOnBadRequest, 
+        ICollectOnFailure, 
+        ISendMessage
     {
 
     }
@@ -48,24 +66,44 @@ namespace Bolt.FluentHttpClient.Abstracts.Fluent
         IHaveTimeout TimeoutInSeconds(int seconds);
         IHaveTimeout TimeoutInMinutes(int minutes);
     }
-    public interface IHaveTimeout : ICollectTimeout, ICollectOnFailure, ISendMessage
+    public interface IHaveTimeout : 
+        ICollectTimeout, 
+        ICollectOnFailure,
+        ICollectOnBadRequest,
+        ICollectionStatusBasedOnFailure, 
+        ISendMessage
     {
 
     }
 
     public interface IHaveOnFailure : ISendMessage
     {
-        IHaveOnFailure OnFailureAsync(HttpStatusCode statusCode, Func<IHttpOnFailureInput,Task> handlerAsync);
-        IHaveOnFailure OnFailure<T>(HttpStatusCode statusCode, Action<T> handlerAsync);
-        IHaveOnFailure OnBadRequest<T>(Action<T> handlerAsync);
     }
 
     public interface ICollectOnFailure
     {
         IHaveOnFailure OnFailureAsync(Func<IHttpOnFailureInput,Task> handler);
-        IHaveOnFailure OnFailureAsync(HttpStatusCode statusCode, Func<IHttpOnFailureInput, Task> handlerAsync);
-        IHaveOnFailure OnFailure<T>(HttpStatusCode statusCode, Action<T> handlerAsync);
-        IHaveOnFailure OnBadRequest<T>(Action<T> handlerAsync);
+    }
+
+    public interface IHaveStatusBasedOnFailure : ICollectionStatusBasedOnFailure, ICollectOnBadRequest, ISendMessage
+    {
+
+    }
+
+    public interface ICollectionStatusBasedOnFailure
+    {
+        IHaveStatusBasedOnFailure OnFailureAsync(HttpStatusCode statusCode, Func<IHttpOnFailureInput, Task> handlerAsync);
+        IHaveStatusBasedOnFailure OnFailure<T>(HttpStatusCode statusCode, Action<T> handlerAsync);
+    }
+
+    public interface IHaveOnBadRequest : ICollectionStatusBasedOnFailure, ISendMessage
+    {
+
+    }
+
+    public interface ICollectOnBadRequest
+    {
+        IHaveOnBadRequest OnBadRequest<T>(Action<T> handlerAsync);
     }
 
     public interface ISendMessage

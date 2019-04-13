@@ -29,7 +29,39 @@ inject `IFluentHttpClient` in your class and sample usage below:
             
             return response.Content;
         }
+
+		public async Task<BookDto> Create(CreateBookInput input)
+        {
+            var resonse = await _client
+                .Path($"http://api-books.bookwork.com.au/books/")
+                .TimeoutInMilliseconds(500)
+                .PostAsync<CreateBookInput,BookDto>(input);
+                // If you don't expect any response content then use following
+                // .PostAsync<CreateBookInput>(input);
+                // if you don't have any input but expect output then use following
+                // .PostAsync<BookDto>();
+				
+            return response.Content;
+        }
     }
+
+When doing post or put if you don't have input but expect some response content then use following
+
+    ...
+    .PostAsync<TOutput>();
+
+    // for put
+    ...
+    .PutAsync<TOutput>();
+
+When doing post/put if you don't expect any output but has input then use following
+
+    ...
+    .PostAsync(TInput);
+
+    // for put
+    ...
+    .PutAsync(TInput);
 
 ## You can enable each requests log with time taken, statuscode
 
