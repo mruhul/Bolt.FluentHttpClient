@@ -1,8 +1,6 @@
-﻿using Bolt.FluentHttpClient.Abstracts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Bolt.FluentHttpClient.Abstracts.Fluent
@@ -16,7 +14,6 @@ namespace Bolt.FluentHttpClient.Abstracts.Fluent
         ICollectionStatusBasedOnFailure, 
         ISendMessage
     {
-
     }
 
     public interface ICollectUrl
@@ -38,9 +35,9 @@ namespace Bolt.FluentHttpClient.Abstracts.Fluent
         ICollectTimeout,
         ICollectOnFailure,
         ICollectOnBadRequest,
-        ICollectionStatusBasedOnFailure, ISendMessage
+        ICollectionStatusBasedOnFailure, 
+        ISendMessage
     {
-
     }
 
 
@@ -59,21 +56,21 @@ namespace Bolt.FluentHttpClient.Abstracts.Fluent
 
     }
 
+
+    public interface IHaveTimeout :
+        ICollectTimeout,
+        ICollectOnFailure,
+        ICollectOnBadRequest,
+        ICollectionStatusBasedOnFailure,
+        ISendMessage
+    {
+    }
     public interface ICollectTimeout 
     {
         IHaveTimeout Timeout(TimeSpan timeout);
         IHaveTimeout TimeoutInMilliseconds(int ms);
         IHaveTimeout TimeoutInSeconds(int seconds);
         IHaveTimeout TimeoutInMinutes(int minutes);
-    }
-    public interface IHaveTimeout : 
-        ICollectTimeout, 
-        ICollectOnFailure,
-        ICollectOnBadRequest,
-        ICollectionStatusBasedOnFailure, 
-        ISendMessage
-    {
-
     }
 
     public interface IHaveOnFailure : ISendMessage
@@ -87,7 +84,6 @@ namespace Bolt.FluentHttpClient.Abstracts.Fluent
 
     public interface IHaveStatusBasedOnFailure : ICollectionStatusBasedOnFailure, ICollectOnBadRequest, ISendMessage
     {
-
     }
 
     public interface ICollectionStatusBasedOnFailure
@@ -98,7 +94,6 @@ namespace Bolt.FluentHttpClient.Abstracts.Fluent
 
     public interface IHaveOnBadRequest : ICollectionStatusBasedOnFailure, ISendMessage
     {
-
     }
 
     public interface ICollectOnBadRequest
