@@ -22,7 +22,7 @@ inject `IFluentHttpClient` in your class and sample usage below:
         public async Task<BookDto> GetById(string id)
         {
             var resonse = await _client
-                .Path($"http://api-books.bookwork.com.au/books/{id}")
+                .Url($"http://api-books.bookwork.com.au/books/{id}")
                 .Retry(1)
                 .TimeoutInMilliseconds(500)
                 .GetAsync<BookDto>();
@@ -33,7 +33,7 @@ inject `IFluentHttpClient` in your class and sample usage below:
 		public async Task<BookDto> Create(CreateBookInput input)
         {
             var resonse = await _client
-                .Path("http://api-books.bookwork.com.au/books/")
+                .Url("http://api-books.bookwork.com.au/books/")
                 .TimeoutInMilliseconds(500)
                 .PostAsync<CreateBookInput,BookDto>(input);
                 // If you don't expect any response content then use following
