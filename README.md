@@ -69,20 +69,21 @@ When doing post/put if you don't expect any output but has input then use follow
 For example the endpoint you requesting can return badrequest and you like to get Errros when this happen. First define the Error dto and then use that dto as below:
 
     Error err = null;
+    AuthError authError = null;
     var rsp = await _fluentHttpClient
         .Url("http://api-books.com.au/books/")
         .OnBadRequest<Error>(dto => { err = dto; })
+        .OnFailure<AuthError>(dto => { authError = dto; })
         .PostAsync<CreateBook>(new CreateBook
         { 
             ...
         });
 
     if(rsp.StatusCode == HttpStatusCode.OK) return rsp.Content;
-    if(rsp.StatusCode == HttpStatusCode.BadRequest) return err; // just to show. will not compile :)
+    if(rsp.StatusCode == HttpStatusCode.BadRequest) return err;
+    if(rsp.StatusCode == HttpStatusCode.Unauthorized) return authErr; // just to show. will not compile :)
 
-You can even do this for any status code. e.g
 
-    .OnFailure<AuthError>(HttpStatusCode.Unauthorized, authErr => { // assign authErr to you local variable... });
 
 ## You can enable each requests log with time taken, statuscode
 
