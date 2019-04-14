@@ -73,7 +73,7 @@ For example the endpoint you requesting can return badrequest and you like to ge
     var rsp = await _fluentHttpClient
         .Url("http://api-books.com.au/books/")
         .OnBadRequest<Error>(dto => { err = dto; })
-        .OnFailure<AuthError>(dto => { authError = dto; })
+        .OnFailure<AuthError>(HttpStatusCode.Unauthorized, dto => { authError = dto; })
         .PostAsync<CreateBook>(new CreateBook
         { 
             ...
