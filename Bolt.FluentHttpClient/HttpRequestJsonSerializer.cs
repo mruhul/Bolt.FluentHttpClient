@@ -1,12 +1,13 @@
 ﻿using Bolt.FluentHttpClient.Abstracts;
 using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Bolt.FluentHttpClient
 {
-    public class HttpMessageSerializer : IHttpMessageSerializer
+    public class HttpRequestJsonSerializer : IHttpSerializer
     {
         public T Deserialize<T>(Stream stream)
         {
@@ -28,6 +29,13 @@ namespace Bolt.FluentHttpClient
 
             stream.Seek(0, SeekOrigin.Begin);
         }
-    }
 
+        public bool IsApplicable(string contentType)
+        {
+            return string.IsNullOrWhiteSpace(contentType) 
+                || string.Equals(contentType, Constants.ContentTypeJson, StringComparison.OrdinalIgnoreCase)
+                || contentType.EndsWith("+json", StringComparison.OrdinalIgnoreCase);
+        }
+
+    }
 }

@@ -23,21 +23,23 @@ namespace Bolt.FluentHttpClient
                 }
                 catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
                 {
-                    return BuildTimedoutResponse();
+                    return BuildTimedoutResponse(request, timeout);
                 }
                 catch (HttpRequestException e)
                     when (!cancellationToken.IsCancellationRequested
                         && e.InnerException != null
                         && e.InnerException is OperationCanceledException)
                 {
-                    return BuildTimedoutResponse();
+                    return BuildTimedoutResponse(request, timeout);
                 }
             }
         }
 
 
-        private static HttpResponseMessage BuildTimedoutResponse()
+        private static HttpResponseMessage BuildTimedoutResponse(HttpRequestMessage request, TimeSpan timeout)
         {
+            HttpRequestLog.Error($"Http request timedout after {timeout.TotalMilliseconds}ms | url: {request.RequestUri} | method:{request.Method}");
+
             var rsp = new HttpResponseMessage
             {
                 StatusCode = System.Net.HttpStatusCode.RequestTimeout,

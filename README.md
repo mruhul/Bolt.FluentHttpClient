@@ -91,3 +91,20 @@ Just update your startup configure code as below:
 
     serviceCollection.AddFluentHttpClient(new FluentHttpClientSetupOptions { EnablePerformanceLog = true });
 
+## How I can mock my requests for testing?
+
+You can mock any requests by just providing response in json file that match with url and statuscode. You can extend the capability by implementing you own IFakeResponse. To get an overview take a look at FluentHttpClientFixture.cs and Fake_Request_Should.cs file. That illustrate how Bolt.FluentHttpClient.Fake used to mock httprequest. More details with example coming soon.
+
+## A FluenUrlBuilder available with this lib
+
+example usage:
+
+    FluentUrl
+        .New("http://www.google.com")
+        .Path("test", "hello")
+        .QueryString("id", "e r")
+        .QueryString("isTrue", true)
+        .Build()
+
+Should build and url as `http://www.google.com/test/hello?id=e%20r&isTrue=true`
+

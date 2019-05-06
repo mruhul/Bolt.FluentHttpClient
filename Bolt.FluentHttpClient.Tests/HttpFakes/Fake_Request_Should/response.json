@@ -1,0 +1,35 @@
+[
+  {
+    "RequestUrl": "http://nodomain/test1/books",
+    "RequestMethod": "GET",
+    "StatusCode": 200,
+    "Headers": {
+      "x-code": "fak-httpclient"
+    },
+    "Content": [
+      {
+        "id": "1",
+        "Name": "Programming c#",
+        "Price": 90.98
+      },
+      {
+        "id": "2",
+        "Name": "XUnit in action",
+        "Price": 80.00
+      }
+    ]
+  },
+  {
+    "RequestUrl": "http://nodomain/test2/books/100",
+    "RequestMethod": "GET",
+    "StatusCode": 200,
+    "Headers": {
+      "x-code": "fak-httpclient"
+    },
+    "Content": {
+      "id": "100",
+      "Name": "Programming c#",
+      "Price": 99.99
+    }
+  }
+]

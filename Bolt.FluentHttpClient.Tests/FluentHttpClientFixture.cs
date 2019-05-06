@@ -1,7 +1,9 @@
 ﻿using Bolt.FluentHttpClient.Abstracts;
-using Bolt.FluentHttpClient.Abstracts.Fluent;
+using Bolt.FluentHttpClient.Fluent;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using System;
+using System.Net.Http;
 
 namespace Bolt.FluentHttpClient.Tests
 {
@@ -11,8 +13,25 @@ namespace Bolt.FluentHttpClient.Tests
 
         public FluentHttpClientFixture()
         {
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.File("log.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
             var sc = new ServiceCollection();
-            sc.AddFluentHttpClient(new FluentHttpClientSetupOptions { EnablePerformanceLog = false });
+            var name = "httprequest.test";
+            sc.AddFakeFluentHttpClient(name);
+            sc.AddFluentHttpClient(new FluentHttpClientSetupOptions { Name = name, EnablePerformanceLog = true });
+
+            sc.AddLogging(lb => lb.AddSerilog(dispose: true));
+            sc.AddHttpClient("raw")
+                .ConfigurePrimaryHttpMessageHandler(h => new HttpClientHandler
+                {
+
+                    AutomaticDecompression = System.Net.DecompressionMethods.Deflate | System.Net.DecompressionMethods.GZip,
+                    MaxConnectionsPerServer = 1024,
+                });
             _sp = sc.BuildServiceProvider();
         }
 
@@ -22,6 +41,6 @@ namespace Bolt.FluentHttpClient.Tests
         }
 
         public IFluentHttpClient Client => _sp.GetRequiredService<IFluentHttpClient>();
-        public IHaveUrl Request(string path) => _sp.GetRequiredService<IFluentHttpClient>().Url($"http://localhost:50276/{path.TrimStart('/')}");
+        public IHaveUrl Request(string path) => _sp.GetRequiredService<IFluentHttpClient>().ForUrl($"http://localhost:50276/{path.TrimStart('/')}");
     }
 }

@@ -22,6 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleBooksApi", "SampleBoo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleBooksApi.Contracts", "SampleBooksApi.Contracts\SampleBooksApi.Contracts.csproj", "{EBBBFE60-DDD6-4B5E-B104-EC89FB52B6E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bolt.FluentHttpClient.Fake", "Bolt.FluentHttpClient.Fake\Bolt.FluentHttpClient.Fake.csproj", "{DF877D2F-2D66-4632-AC9F-3DA3334E7D2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{EBBBFE60-DDD6-4B5E-B104-EC89FB52B6E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBBBFE60-DDD6-4B5E-B104-EC89FB52B6E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBBBFE60-DDD6-4B5E-B104-EC89FB52B6E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF877D2F-2D66-4632-AC9F-3DA3334E7D2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF877D2F-2D66-4632-AC9F-3DA3334E7D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF877D2F-2D66-4632-AC9F-3DA3334E7D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF877D2F-2D66-4632-AC9F-3DA3334E7D2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

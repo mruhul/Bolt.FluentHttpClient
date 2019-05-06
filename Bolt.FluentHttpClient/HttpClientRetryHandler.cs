@@ -11,6 +11,7 @@ namespace Bolt.FluentHttpClient
             HttpStatusCode.BadGateway,
             HttpStatusCode.InternalServerError,
             HttpStatusCode.RequestTimeout,
+            HttpStatusCode.GatewayTimeout,
             HttpStatusCode.ServiceUnavailable
         };
 
@@ -23,10 +24,14 @@ namespace Bolt.FluentHttpClient
             for (var i = 0; i < retryCount + 1; i++)
             {
                 response = await base.SendAsync(request, cancellationToken);
-                
-                if(!ShouldRetry(response))
+
+                if (!ShouldRetry(response))
                 {
                     return response;
+                }
+                else
+                {
+                    HttpRequestLog.Error($"Retrying {i+1} time(s) after http request failed with statuscode {response.StatusCode} | url: {request.RequestUri} | method:{request.Method}");
                 }
             }
 

@@ -57,8 +57,9 @@ namespace Bolt.FluentHttpClient.Tests
             ErrorResponse error = null;
             string statusMessage = string.Empty;
             var rsp = await _fixture.Request("/api/users")
-                .OnFailureAsync(HttpStatusCode.InternalServerError, async (msg) => {
-                    using (var sr = new StreamReader(msg.Stream))
+                .OnFailure(HttpStatusCode.InternalServerError, async (msg, serializer) =>
+                {
+                    using (var sr = new StreamReader(msg.ContentStream))
                     {
                         statusMessage = await sr.ReadToEndAsync();
                     }

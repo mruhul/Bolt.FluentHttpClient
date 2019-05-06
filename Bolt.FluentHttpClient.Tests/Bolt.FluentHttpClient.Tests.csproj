@@ -7,17 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Bolt.Common.Extensions" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.4" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
     <PackageReference Include="Shouldly" Version="3.0.2" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Bolt.FluentHttpClient.Fake\Bolt.FluentHttpClient.Fake.csproj" />
     <ProjectReference Include="..\Bolt.FluentHttpClient\Bolt.FluentHttpClient.csproj" />
     <ProjectReference Include="..\SampleBooksApi.Contracts\SampleBooksApi.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="HttpFakes\Fake_Request_Should\response.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
