@@ -1,6 +1,10 @@
 # Bolt.FluentHttpClient
 
-A library to use httpclient fluently.
+A library to use httpclient fluently and support for Timeout / Retry.
+- Support timeout
+- Support Retry
+- Support strong type data output and input using json serialization
+- Support read of different Error dto based on failure status codes
 
 ## How to use this library
 
