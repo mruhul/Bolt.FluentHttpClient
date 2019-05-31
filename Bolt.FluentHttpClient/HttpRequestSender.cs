@@ -107,6 +107,14 @@ namespace Bolt.FluentHttpClient
 
             if (input.Content != null) msg.Content = input.Content;
 
+            if(input.Properties != null)
+            {
+                foreach(var property in input.Properties)
+                {
+                    msg.Properties.Add(property.Key, property.Value);
+                }
+            }
+
             msg.Properties.Add(Constants.PropertyNameRetryCount, input.RetryCount);
             msg.Properties.Add(Constants.PropertyNameTimeout, input.Timeout == TimeSpan.Zero ? TimeSpan.FromMinutes(5) : input.Timeout);
 

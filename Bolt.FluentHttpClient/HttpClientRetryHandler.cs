@@ -40,7 +40,9 @@ namespace Bolt.FluentHttpClient
 
         protected bool ShouldRetry(HttpResponseMessage msg)
         {
-            if (msg.IsSuccessStatusCode || msg.StatusCode == HttpStatusCode.BadRequest) return false;
+            if (msg.IsSuccessStatusCode 
+                || msg.StatusCode == HttpStatusCode.BadRequest
+                || msg.StatusCode == HttpStatusCode.Unauthorized) return false;
 
             foreach (var code in StatusCodeToRetry)
             {

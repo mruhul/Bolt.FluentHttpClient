@@ -2,7 +2,7 @@
 
 namespace Bolt.FluentHttpClient
 {
-    internal static class HttpRequestMessageExtensions
+    public static class HttpRequestMessageExtensions
     {
         public static T GetPropertyValueOrDefault<T>(this HttpRequestMessage msg, string name)
         {

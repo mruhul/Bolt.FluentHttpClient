@@ -6,12 +6,20 @@ using System.Threading.Tasks;
 
 namespace Bolt.FluentHttpClient.Fluent
 {
-    public interface IHaveUrl : ICollectHeader, ICollectTimeout, ICollectRetryCount, ICollectOnFailure, IRequestExecute
+    public interface IHaveUrl : ICollectHeader, ICollectTimeout, ICollectRetryCount, ICollectOnFailure, ICollectProperties, IRequestExecute
     {
     }
     public interface ICollectUrl
     {
         IHaveUrl Url(string url);
+    }
+
+    public interface IHaveProperties : ICollectProperties, ICollectHeader, ICollectTimeout, ICollectRetryCount, ICollectOnFailure, IRequestExecute
+    { }
+    public interface ICollectProperties
+    {
+        IHaveProperties Properties(Dictionary<string, object> properties);
+        IHaveProperties Property(string name, object value);
     }
 
     public interface IHaveHeader : ICollectHeader, ICollectRetryCount, ICollectTimeout, ICollectOnFailure, IRequestExecute { }

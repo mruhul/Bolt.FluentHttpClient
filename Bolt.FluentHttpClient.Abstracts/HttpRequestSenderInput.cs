@@ -10,6 +10,7 @@ namespace Bolt.FluentHttpClient.Abstracts
         public string Url { get; set; }
         public HttpMethod Method { get; set; }
         public IEnumerable<HttpHeader> Headers { get; set; }
+        public Dictionary<string,object> Properties { get; set; }
         public HttpContent Content { get; set; }
 
         public int RetryCount { get; set; }

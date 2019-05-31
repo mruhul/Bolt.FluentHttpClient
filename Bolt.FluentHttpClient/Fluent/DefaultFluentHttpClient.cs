@@ -9,10 +9,11 @@ using Bolt.FluentHttpClient.Abstracts;
 
 namespace Bolt.FluentHttpClient.Fluent
 {
-    internal class FluentHttpClientImp : ICollectUrl, IHaveUrl, IHaveOnFailure, IHaveHeader, IHaveTimeout, IHaveRetryCount, IRequestExecute
+    internal class FluentHttpClientImp : ICollectUrl, IHaveUrl, IHaveProperties, IHaveOnFailure, IHaveHeader, IHaveTimeout, IHaveRetryCount, IRequestExecute
     {
         private readonly IFluentHttpClient _http;
         private string _url;
+        private Dictionary<string, object> _properties;
         private readonly List<HttpHeader> _headers = new List<HttpHeader>();
         private Func<HttpResponseContent, IHttpSerializer, Task> _onFailure = null;
         private Dictionary<HttpStatusCode, Func<HttpResponseContent, IHttpSerializer, Task>> _errors;
@@ -89,7 +90,8 @@ namespace Bolt.FluentHttpClient.Fluent
                 Method = HttpMethod.Delete,
                 OnFailure = BuildOnFailure(),
                 RetryCount = _retryCount,
-                Timeout = _timeout
+                Timeout = _timeout,
+                Properties = _properties
             });
         }
 
@@ -102,7 +104,8 @@ namespace Bolt.FluentHttpClient.Fluent
                 Method = HttpMethod.Get,
                 OnFailure = BuildOnFailure(),
                 RetryCount = _retryCount,
-                Timeout = _timeout
+                Timeout = _timeout,
+                Properties = _properties
             });
         }
 
@@ -115,7 +118,8 @@ namespace Bolt.FluentHttpClient.Fluent
                 Method = HttpMethod.Post,
                 OnFailure = BuildOnFailure(),
                 RetryCount = _retryCount,
-                Timeout = _timeout
+                Timeout = _timeout,
+                Properties = _properties
             });
         }
 
@@ -128,7 +132,8 @@ namespace Bolt.FluentHttpClient.Fluent
                 Method = HttpMethod.Post,
                 OnFailure = BuildOnFailure(),
                 RetryCount = _retryCount,
-                Timeout = _timeout
+                Timeout = _timeout,
+                Properties = _properties
             });
         }
 
@@ -142,7 +147,8 @@ namespace Bolt.FluentHttpClient.Fluent
                 OnFailure = BuildOnFailure(),
                 RetryCount = _retryCount,
                 Timeout = _timeout,
-                Content = input
+                Content = input,
+                Properties = _properties
             });
         }
 
@@ -156,7 +162,8 @@ namespace Bolt.FluentHttpClient.Fluent
                 OnFailure = BuildOnFailure(),
                 RetryCount = _retryCount,
                 Timeout = _timeout,
-                Content = input
+                Content = input,
+                Properties = _properties
             });
         }
 
@@ -169,7 +176,8 @@ namespace Bolt.FluentHttpClient.Fluent
                 Method = HttpMethod.Put,
                 OnFailure = BuildOnFailure(),
                 RetryCount = _retryCount,
-                Timeout = _timeout
+                Timeout = _timeout,
+                Properties = _properties
             });
         }
 
@@ -182,7 +190,8 @@ namespace Bolt.FluentHttpClient.Fluent
                 Method = HttpMethod.Put,
                 OnFailure = BuildOnFailure(),
                 RetryCount = _retryCount,
-                Timeout = _timeout
+                Timeout = _timeout,
+                Properties = _properties
             });
         }
 
@@ -197,7 +206,8 @@ namespace Bolt.FluentHttpClient.Fluent
                 OnFailure = BuildOnFailure(),
                 RetryCount = _retryCount,
                 Timeout = _timeout,
-                Content = input
+                Content = input,
+                Properties = _properties
             });
         }
 
@@ -211,7 +221,8 @@ namespace Bolt.FluentHttpClient.Fluent
                 OnFailure = BuildOnFailure(),
                 RetryCount = _retryCount,
                 Timeout = _timeout,
-                Content = input
+                Content = input,
+                Properties = _properties
             });
         }
 
@@ -262,6 +273,29 @@ namespace Bolt.FluentHttpClient.Fluent
         public IHaveOnFailure OnBadRequest<TError>(Action<TError> onBadRequest)
         {
             return OnFailure(HttpStatusCode.BadRequest, onBadRequest);
+        }
+
+        public IHaveProperties Properties(Dictionary<string, object> properties)
+        {
+            if (properties == null) return this;
+
+            if (_properties == null) _properties = new Dictionary<string, object>();
+
+            foreach(var item in properties)
+            {
+                _properties[item.Key] = item.Value;
+            }
+
+            return this;
+        }
+
+        public IHaveProperties Property(string name, object value)
+        {
+            if (_properties == null) _properties = new Dictionary<string, object>();
+
+            _properties[name] = value;
+
+            return this;
         }
     }
 }

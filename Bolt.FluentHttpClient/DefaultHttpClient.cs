@@ -109,6 +109,7 @@ namespace Bolt.FluentHttpClient
             result.Method = input.Method;
             result.RetryCount = input.RetryCount;
             result.Timeout = input.Timeout;
+            result.Properties = input.Properties;
 
             if(input.OnFailure != null)
             {

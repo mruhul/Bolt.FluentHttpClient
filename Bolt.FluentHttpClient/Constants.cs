@@ -1,6 +1,6 @@
 ﻿namespace Bolt.FluentHttpClient
 {
-    internal class Constants
+    public class Constants
     {
         public const string PropertyNameTimeout = "__timeout";
         public const string PropertyNameRetryCount = "__retryCount";
