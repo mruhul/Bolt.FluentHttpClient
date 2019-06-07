@@ -95,7 +95,7 @@ namespace Bolt.FluentHttpClient
             var msg = new HttpRequestMessage();
 
             msg.Method = input.Method;
-            msg.RequestUri = new Uri(input.Url);
+            msg.RequestUri = input.Uri;
 
             if(input.Headers != null)
             {

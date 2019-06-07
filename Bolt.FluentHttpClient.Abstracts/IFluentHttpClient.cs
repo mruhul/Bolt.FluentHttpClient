@@ -16,11 +16,11 @@ namespace Bolt.FluentHttpClient.Abstracts
 
     public class HttpRequestInput
     {
-        public string Url { get; set; }
+        public Uri Uri { get; set; }
         public HttpMethod Method { get; set; } = HttpMethod.Get;
         public IEnumerable<HttpHeader> Headers { get; set; }
         public Dictionary<string,object> Properties { get; set; }
-        public int RetryCount { get; set; }
+        public int Retry { get; set; }
         public TimeSpan Timeout { get; set; }
         public Func<HttpResponseContent, IHttpSerializer, Task> OnFailure { get; set; }
     }

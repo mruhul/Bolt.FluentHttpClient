@@ -85,11 +85,11 @@ namespace Bolt.FluentHttpClient.Fluent
         {
             return _http.SendAsync(new HttpRequestInput
             {
-                Url = _url,
+                Uri = new Uri(_url),
                 Headers = _headers,
                 Method = HttpMethod.Delete,
                 OnFailure = BuildOnFailure(),
-                RetryCount = _retryCount,
+                Retry = _retryCount,
                 Timeout = _timeout,
                 Properties = _properties
             });
@@ -99,11 +99,11 @@ namespace Bolt.FluentHttpClient.Fluent
         {
             return _http.SendAsync<T>(new HttpRequestInput
             {
-                Url = _url,
+                Uri = new Uri(_url),
                 Headers = _headers,
                 Method = HttpMethod.Get,
                 OnFailure = BuildOnFailure(),
-                RetryCount = _retryCount,
+                Retry = _retryCount,
                 Timeout = _timeout,
                 Properties = _properties
             });
@@ -113,11 +113,11 @@ namespace Bolt.FluentHttpClient.Fluent
         {
             return _http.SendAsync(new HttpRequestInput
             {
-                Url = _url,
+                Uri = new Uri(_url),
                 Headers = _headers,
                 Method = HttpMethod.Post,
                 OnFailure = BuildOnFailure(),
-                RetryCount = _retryCount,
+                Retry = _retryCount,
                 Timeout = _timeout,
                 Properties = _properties
             });
@@ -127,11 +127,11 @@ namespace Bolt.FluentHttpClient.Fluent
         {
             return _http.SendAsync<TOutput>(new HttpRequestInput
             {
-                Url = _url,
+                Uri = new Uri(_url),
                 Headers = _headers,
                 Method = HttpMethod.Post,
                 OnFailure = BuildOnFailure(),
-                RetryCount = _retryCount,
+                Retry = _retryCount,
                 Timeout = _timeout,
                 Properties = _properties
             });
@@ -141,11 +141,11 @@ namespace Bolt.FluentHttpClient.Fluent
         {
             return _http.SendAsync<TInput,TOutput>(new HttpRequestInput<TInput>
             {
-                Url = _url,
+                Uri = new Uri(_url),
                 Headers = _headers,
                 Method = HttpMethod.Post,
                 OnFailure = BuildOnFailure(),
-                RetryCount = _retryCount,
+                Retry = _retryCount,
                 Timeout = _timeout,
                 Content = input,
                 Properties = _properties
@@ -156,11 +156,11 @@ namespace Bolt.FluentHttpClient.Fluent
         {
             return _http.SendAsync(new HttpRequestInput<TInput>
             {
-                Url = _url,
+                Uri = new Uri(_url),
                 Headers = _headers,
                 Method = HttpMethod.Post,
                 OnFailure = BuildOnFailure(),
-                RetryCount = _retryCount,
+                Retry = _retryCount,
                 Timeout = _timeout,
                 Content = input,
                 Properties = _properties
@@ -171,11 +171,11 @@ namespace Bolt.FluentHttpClient.Fluent
         {
             return _http.SendAsync(new HttpRequestInput
             {
-                Url = _url,
+                Uri = new Uri(_url),
                 Headers = _headers,
                 Method = HttpMethod.Put,
                 OnFailure = BuildOnFailure(),
-                RetryCount = _retryCount,
+                Retry = _retryCount,
                 Timeout = _timeout,
                 Properties = _properties
             });
@@ -185,11 +185,11 @@ namespace Bolt.FluentHttpClient.Fluent
         {
             return _http.SendAsync<TOutput>(new HttpRequestInput
             {
-                Url = _url,
+                Uri = new Uri(_url),
                 Headers = _headers,
                 Method = HttpMethod.Put,
                 OnFailure = BuildOnFailure(),
-                RetryCount = _retryCount,
+                Retry = _retryCount,
                 Timeout = _timeout,
                 Properties = _properties
             });
@@ -200,11 +200,11 @@ namespace Bolt.FluentHttpClient.Fluent
         {
             return _http.SendAsync(new HttpRequestInput<TInput>
             {
-                Url = _url,
+                Uri = new Uri(_url),
                 Headers = _headers,
                 Method = HttpMethod.Put,
                 OnFailure = BuildOnFailure(),
-                RetryCount = _retryCount,
+                Retry = _retryCount,
                 Timeout = _timeout,
                 Content = input,
                 Properties = _properties
@@ -215,11 +215,11 @@ namespace Bolt.FluentHttpClient.Fluent
         {
             return _http.SendAsync<TInput, TOutput>(new HttpRequestInput<TInput>
             {
-                Url = _url,
+                Uri = new Uri(_url),
                 Headers = _headers,
                 Method = HttpMethod.Put,
                 OnFailure = BuildOnFailure(),
-                RetryCount = _retryCount,
+                Retry = _retryCount,
                 Timeout = _timeout,
                 Content = input,
                 Properties = _properties
