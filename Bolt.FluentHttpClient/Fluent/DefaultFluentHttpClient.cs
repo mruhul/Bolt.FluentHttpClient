@@ -19,8 +19,8 @@ namespace Bolt.FluentHttpClient.Fluent
         private Dictionary<HttpStatusCode, Func<HttpResponseContent, IHttpSerializer, Task>> _errors;
 
 
-        private int _retryCount;
-        private TimeSpan _timeout = TimeSpan.Zero;
+        private int? _retryCount;
+        private TimeSpan? _timeout;
 
 
         internal FluentHttpClientImp(IFluentHttpClient http)

@@ -115,8 +115,15 @@ namespace Bolt.FluentHttpClient
                 }
             }
 
-            msg.Properties.Add(Constants.PropertyNameRetryCount, input.RetryCount);
-            msg.Properties.Add(Constants.PropertyNameTimeout, input.Timeout == TimeSpan.Zero ? TimeSpan.FromMinutes(5) : input.Timeout);
+            if (input.Retry.HasValue)
+            {
+                msg.Properties.Add(Constants.PropertyNameRetryCount, input.Retry.Value);
+            }
+
+            if (input.Timeout.HasValue)
+            {
+                msg.Properties.Add(Constants.PropertyNameTimeout, input.Timeout.Value);
+            }
 
             return msg;
         }

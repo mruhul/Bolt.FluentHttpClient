@@ -13,8 +13,8 @@ namespace Bolt.FluentHttpClient.Abstracts
         public Dictionary<string,object> Properties { get; set; }
         public HttpContent Content { get; set; }
 
-        public int RetryCount { get; set; }
-        public TimeSpan Timeout { get; set; }
+        public int? Retry { get; set; }
+        public TimeSpan? Timeout { get; set; }
 
         public Func<HttpResponseContent,Task> OnSuccess { get; set; }
         public Func<HttpResponseContent, Task> OnFailure { get; set; }

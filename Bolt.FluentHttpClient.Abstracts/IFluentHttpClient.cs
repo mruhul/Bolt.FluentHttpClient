@@ -20,8 +20,8 @@ namespace Bolt.FluentHttpClient.Abstracts
         public HttpMethod Method { get; set; } = HttpMethod.Get;
         public IEnumerable<HttpHeader> Headers { get; set; }
         public Dictionary<string,object> Properties { get; set; }
-        public int Retry { get; set; }
-        public TimeSpan Timeout { get; set; }
+        public int? Retry { get; set; }
+        public TimeSpan? Timeout { get; set; }
         public Func<HttpResponseContent, IHttpSerializer, Task> OnFailure { get; set; }
     }
 

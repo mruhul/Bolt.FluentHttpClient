@@ -107,7 +107,7 @@ namespace Bolt.FluentHttpClient
             result.Uri = input.Uri;
             result.Headers = input.Headers;
             result.Method = input.Method;
-            result.RetryCount = input.Retry;
+            result.Retry = input.Retry;
             result.Timeout = input.Timeout;
             result.Properties = input.Properties;
 
