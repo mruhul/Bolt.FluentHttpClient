@@ -24,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleBooksApi.Contracts", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bolt.FluentHttpClient.Fake", "Bolt.FluentHttpClient.Fake\Bolt.FluentHttpClient.Fake.csproj", "{DF877D2F-2D66-4632-AC9F-3DA3334E7D2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bolt.FluentHttpClient.CircuitBreaker", "Bolt.FluentHttpClient.CircuitBreaker\Bolt.FluentHttpClient.CircuitBreaker.csproj", "{C55B0C60-85C8-4FF4-B638-4CEA9C111951}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bolt.FluentHttpClient.CircuitBreaker", "Bolt.FluentHttpClient.CircuitBreaker\Bolt.FluentHttpClient.CircuitBreaker.csproj", "{C55B0C60-85C8-4FF4-B638-4CEA9C111951}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
