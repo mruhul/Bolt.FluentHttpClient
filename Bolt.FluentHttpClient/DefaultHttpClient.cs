@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Bolt.FluentHttpClient
@@ -19,9 +20,9 @@ namespace Bolt.FluentHttpClient
             _serializers = serializers;
         }
 
-        public async Task<HttpRequestOutput> SendAsync(HttpRequestInput input)
+        public async Task<HttpRequestOutput> SendAsync(HttpRequestInput input, CancellationToken cancellationToken)
         {
-            var rsp = await _sender.SendAsync(BuildRequest(input));
+            var rsp = await _sender.SendAsync(BuildRequest(input), cancellationToken);
 
             return new HttpRequestOutput
             {
@@ -30,13 +31,13 @@ namespace Bolt.FluentHttpClient
             };
         }
 
-        public async Task<HttpRequestOutput> SendAsync<TInput>(HttpRequestInput<TInput> input)
+        public async Task<HttpRequestOutput> SendAsync<TInput>(HttpRequestInput<TInput> input, CancellationToken cancellationToken)
         {
             using (var ms = new MemoryStream())
             {
                 using (var request = await BuildRequestAsync(input, ms))
                 {
-                    var rsp = await _sender.SendAsync(request);
+                    var rsp = await _sender.SendAsync(request, cancellationToken);
                     
                     return new HttpRequestOutput
                     {
@@ -47,7 +48,7 @@ namespace Bolt.FluentHttpClient
             }
         }
 
-        public async Task<HttpRequestOutput<TOutput>> SendAsync<TInput, TOutput>(HttpRequestInput<TInput> input)
+        public async Task<HttpRequestOutput<TOutput>> SendAsync<TInput, TOutput>(HttpRequestInput<TInput> input, CancellationToken cancellationToken)
         {
             using (var ms = new MemoryStream())
             {
@@ -63,7 +64,7 @@ namespace Bolt.FluentHttpClient
                         return Task.CompletedTask;
                     };
 
-                    var rsp = await _sender.SendAsync(request);
+                    var rsp = await _sender.SendAsync(request, cancellationToken);
 
                     return new HttpRequestOutput<TOutput>
                     {
@@ -75,7 +76,7 @@ namespace Bolt.FluentHttpClient
             }
         }
 
-        public async Task<HttpRequestOutput<TOutput>> SendAsync<TOutput>(HttpRequestInput input)
+        public async Task<HttpRequestOutput<TOutput>> SendAsync<TOutput>(HttpRequestInput input, CancellationToken cancellationToken)
         {
             using (var request = BuildRequest(input))
             {
@@ -89,7 +90,7 @@ namespace Bolt.FluentHttpClient
                     return Task.CompletedTask;
                 };
 
-                var rsp = await _sender.SendAsync(request);
+                var rsp = await _sender.SendAsync(request, cancellationToken);
 
                 return new HttpRequestOutput<TOutput>
                 {

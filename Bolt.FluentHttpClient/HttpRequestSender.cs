@@ -1,7 +1,7 @@
 ﻿using Bolt.FluentHttpClient.Abstracts;
-using System;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Bolt.FluentHttpClient
@@ -15,13 +15,13 @@ namespace Bolt.FluentHttpClient
             _client = client;
         }
 
-        public async Task<HttpRequestSenderResponse> SendAsync(HttpRequestSenderInput input)
+        public async Task<HttpRequestSenderResponse> SendAsync(HttpRequestSenderInput input, CancellationToken cancellationToken)
         {
             HttpRequestSenderResponse result = null;
 
             using (var msg = BuildMessage(input))
             {
-                using (var httpResponse = await _client.SendAsync(msg, HttpCompletionOption.ResponseHeadersRead))
+                using (var httpResponse = await _client.SendAsync(msg, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
                 {
                     result = BuildRequestResponse(httpResponse);
 
@@ -111,18 +111,18 @@ namespace Bolt.FluentHttpClient
             {
                 foreach(var property in input.Properties)
                 {
-                    msg.Properties.Add(property.Key, property.Value);
+                    msg.Properties[property.Key] = property.Value;
                 }
             }
 
             if (input.Retry.HasValue)
             {
-                msg.Properties.Add(Constants.PropertyNameRetryCount, input.Retry.Value);
+                msg.Properties[Constants.PropertyNameRetryCount] = input.Retry.Value;
             }
 
             if (input.Timeout.HasValue)
             {
-                msg.Properties.Add(Constants.PropertyNameTimeout, input.Timeout.Value);
+                msg.Properties[Constants.PropertyNameTimeout] = input.Timeout.Value;
             }
 
             return msg;

@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Bolt.FluentHttpClient.Abstracts
 {
     public interface IFluentHttpClient
     {
-        Task<HttpRequestOutput> SendAsync(HttpRequestInput input);
-        Task<HttpRequestOutput> SendAsync<TInput>(HttpRequestInput<TInput> input);
-        Task<HttpRequestOutput<TOutput>> SendAsync<TOutput>(HttpRequestInput input);
-        Task<HttpRequestOutput<TOutput>> SendAsync<TInput,TOutput>(HttpRequestInput<TInput> input);
+        Task<HttpRequestOutput> SendAsync(HttpRequestInput input, CancellationToken cancellationToken = default);
+        Task<HttpRequestOutput> SendAsync<TInput>(HttpRequestInput<TInput> input, CancellationToken cancellationToken = default);
+        Task<HttpRequestOutput<TOutput>> SendAsync<TOutput>(HttpRequestInput input, CancellationToken cancellationToken = default);
+        Task<HttpRequestOutput<TOutput>> SendAsync<TInput,TOutput>(HttpRequestInput<TInput> input, CancellationToken cancellationToken = default);
     }
 
     public class HttpRequestInput

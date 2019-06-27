@@ -24,8 +24,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleBooksApi.Contracts", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bolt.FluentHttpClient.Fake", "Bolt.FluentHttpClient.Fake\Bolt.FluentHttpClient.Fake.csproj", "{DF877D2F-2D66-4632-AC9F-3DA3334E7D2E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bolt.FluentHttpClient.CircuitBreaker", "Bolt.FluentHttpClient.CircuitBreaker\Bolt.FluentHttpClient.CircuitBreaker.csproj", "{C55B0C60-85C8-4FF4-B638-4CEA9C111951}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,10 +54,6 @@ Global
 		{DF877D2F-2D66-4632-AC9F-3DA3334E7D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF877D2F-2D66-4632-AC9F-3DA3334E7D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF877D2F-2D66-4632-AC9F-3DA3334E7D2E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C55B0C60-85C8-4FF4-B638-4CEA9C111951}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C55B0C60-85C8-4FF4-B638-4CEA9C111951}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C55B0C60-85C8-4FF4-B638-4CEA9C111951}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C55B0C60-85C8-4FF4-B638-4CEA9C111951}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
