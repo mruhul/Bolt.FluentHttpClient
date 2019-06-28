@@ -58,7 +58,7 @@ namespace Bolt.FluentHttpClient
 
                     request.OnSuccess = (r) =>
                     {
-                        var serializer = _serializers.FirstOrDefault(x => x.IsApplicable(Constants.ContentTypeJson));
+                        var serializer = _serializers.FirstOrDefault(x => x.IsApplicable(Bolt.FluentHttpClient.Abstracts.Constants.ContentTypeJson));
                         output = serializer.Deserialize<TOutput>(r.ContentStream);
 
                         return Task.CompletedTask;
@@ -84,7 +84,7 @@ namespace Bolt.FluentHttpClient
 
                 request.OnSuccess = (r) =>
                 {
-                    var serializer = _serializers.FirstOrDefault(x => x.IsApplicable(Constants.ContentTypeJson));
+                    var serializer = _serializers.FirstOrDefault(x => x.IsApplicable(Bolt.FluentHttpClient.Abstracts.Constants.ContentTypeJson));
                     output = serializer.Deserialize<TOutput>(r.ContentStream);
 
                     return Task.CompletedTask;
@@ -129,7 +129,7 @@ namespace Bolt.FluentHttpClient
 
             if(input.Content == null)
             {
-                result.Content = new StringContent(string.Empty, Encoding.UTF8, input.ContentType ?? Constants.ContentTypeJson);
+                result.Content = new StringContent(string.Empty, Encoding.UTF8, input.ContentType ?? Bolt.FluentHttpClient.Abstracts.Constants.ContentTypeJson);
             }
             else
             {
@@ -139,7 +139,7 @@ namespace Bolt.FluentHttpClient
 
                 var content = new StreamContent(stream, 1024);
                 content.Headers.ContentLength = stream.Length;
-                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(input.ContentType ?? Constants.ContentTypeJson) { CharSet = Constants.ContentCharset };
+                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(input.ContentType ?? Bolt.FluentHttpClient.Abstracts.Constants.ContentTypeJson) { CharSet = Bolt.FluentHttpClient.Abstracts.Constants.ContentCharset };
 
                 result.Content = content;
             }

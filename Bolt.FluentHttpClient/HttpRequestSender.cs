@@ -117,12 +117,12 @@ namespace Bolt.FluentHttpClient
 
             if (input.Retry.HasValue)
             {
-                msg.Properties[Constants.PropertyNameRetryCount] = input.Retry.Value;
+                msg.Properties[Bolt.FluentHttpClient.Abstracts.Constants.PropertyNameRetryCount] = input.Retry.Value;
             }
 
             if (input.Timeout.HasValue)
             {
-                msg.Properties[Constants.PropertyNameTimeout] = input.Timeout.Value;
+                msg.Properties[Bolt.FluentHttpClient.Abstracts.Constants.PropertyNameTimeout] = input.Timeout.Value;
             }
 
             return msg;

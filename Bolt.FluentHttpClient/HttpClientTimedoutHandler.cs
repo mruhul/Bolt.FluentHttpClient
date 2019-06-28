@@ -9,7 +9,7 @@ namespace Bolt.FluentHttpClient
     {
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var timeout = request.GetPropertyValueOrDefault<TimeSpan?>(Constants.PropertyNameTimeout) ?? TimeSpan.Zero;
+            var timeout = request.GetPropertyValueOrDefault<TimeSpan?>(Bolt.FluentHttpClient.Abstracts.Constants.PropertyNameTimeout) ?? TimeSpan.Zero;
 
             if (timeout == TimeSpan.Zero) return await base.SendAsync(request, cancellationToken);
 
@@ -46,7 +46,7 @@ namespace Bolt.FluentHttpClient
                 ReasonPhrase = "HttpClientTimedout"
             };
 
-            rsp.Headers.Add(Constants.HeaderNameError, "HttpClient raised timeoutexception");
+            rsp.Headers.Add(Bolt.FluentHttpClient.Abstracts.Constants.HeaderNameError, "HttpClient raised timeoutexception");
 
             return rsp;
         }

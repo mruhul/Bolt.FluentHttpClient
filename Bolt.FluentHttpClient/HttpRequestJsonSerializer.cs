@@ -33,7 +33,7 @@ namespace Bolt.FluentHttpClient
         public bool IsApplicable(string contentType)
         {
             return string.IsNullOrWhiteSpace(contentType) 
-                || string.Equals(contentType, Constants.ContentTypeJson, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(contentType, Bolt.FluentHttpClient.Abstracts.Constants.ContentTypeJson, StringComparison.OrdinalIgnoreCase)
                 || contentType.EndsWith("+json", StringComparison.OrdinalIgnoreCase);
         }
 

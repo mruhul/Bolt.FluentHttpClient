@@ -17,7 +17,7 @@ namespace Bolt.FluentHttpClient
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var retryCount = request.GetPropertyValueOrDefault<int?>(Constants.PropertyNameRetryCount) ?? 0;
+            var retryCount = request.GetPropertyValueOrDefault<int?>(Bolt.FluentHttpClient.Abstracts.Constants.PropertyNameRetryCount) ?? 0;
 
             HttpResponseMessage response = null;
 
