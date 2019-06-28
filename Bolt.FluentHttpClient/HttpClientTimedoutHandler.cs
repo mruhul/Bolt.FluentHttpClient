@@ -9,7 +9,7 @@ namespace Bolt.FluentHttpClient
     {
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var timeout = request.GetPropertyValueOrDefault<TimeSpan>(Constants.PropertyNameTimeout);
+            var timeout = request.GetPropertyValueOrDefault<TimeSpan?>(Constants.PropertyNameTimeout) ?? TimeSpan.Zero;
 
             if (timeout == TimeSpan.Zero) return await base.SendAsync(request, cancellationToken);
 

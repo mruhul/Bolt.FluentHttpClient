@@ -4,7 +4,7 @@
     "RequestMethod": "GET",
     "StatusCode": 200,
     "Headers": {
-      "x-code": "fak-httpclient"
+      "x-code": "fake-httpclient"
     },
     "Content": [
       {
