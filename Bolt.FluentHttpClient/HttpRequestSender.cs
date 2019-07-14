@@ -29,14 +29,21 @@ namespace Bolt.FluentHttpClient
 
                     if (isSucceed && input.OnSuccess == null)
                     {
-                        HttpRequestLog.Trace("Response succeed and no hanlder for success defined. so returning basic response");
+                        HttpRequestLog.Trace("Response succeed and no handler for success defined. so returning basic response");
 
                         return result;
                     }
 
                     if (!isSucceed && input.OnFailure == null)
                     {
-                        HttpRequestLog.Trace("Failed response and no hanlder for failure defined. so returning basic response");
+                        HttpRequestLog.Trace("Failed response and no handler for failure defined. so returning basic response");
+
+                        return result;
+                    }
+
+                    if(input.OnSuccess == null && input.OnFailure == null)
+                    {
+                        HttpRequestLog.Trace("No failure or success action defined so returning basic response");
 
                         return result;
                     }
@@ -48,19 +55,19 @@ namespace Bolt.FluentHttpClient
                         return result;
                     }
 
-                    var rsp = new HttpResponseContent
-                    {
-                        ContentLength = httpResponse.Content.Headers.ContentLength ?? 0,
-                        StatusCode = httpResponse.StatusCode,
-                        ContentType = httpResponse.Content.Headers.ContentType?.MediaType,
-                        Headers = result.Headers
-                    };
 
                     using (httpResponse.Content)
                     {
                         using (var sr = await httpResponse.Content.ReadAsStreamAsync())
                         {
-                            rsp.ContentStream = sr;
+                            var rsp = new HttpResponseContent
+                            {
+                                ContentLength = httpResponse.Content.Headers.ContentLength ?? 0,
+                                StatusCode = httpResponse.StatusCode,
+                                ContentType = httpResponse.Content.Headers.ContentType?.MediaType,
+                                Headers = result.Headers,
+                                ContentStream = sr
+                            };
 
                             if (isSucceed)
                             {
