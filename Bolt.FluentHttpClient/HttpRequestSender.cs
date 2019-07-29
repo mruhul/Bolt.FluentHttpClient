@@ -29,14 +29,14 @@ namespace Bolt.FluentHttpClient
 
                     if (isSucceed && input.OnSuccess == null)
                     {
-                        HttpRequestLog.Trace("Response succeed and no hanlder for success defined. so returning basic response");
+                        HttpRequestLog.Trace("Response succeed and no handler for success defined. so returning basic response");
 
                         return result;
                     }
 
                     if (!isSucceed && input.OnFailure == null)
                     {
-                        HttpRequestLog.Trace("Failed response and no hanlder for failure defined. so returning basic response");
+                        HttpRequestLog.Trace("Failed response and no handler for failure defined. so returning basic response");
 
                         return result;
                     }
