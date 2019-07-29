@@ -6,7 +6,7 @@
     <AssemblyName>Bolt.FluentHttpClient.Abstracts</AssemblyName>
     <PackageId>Bolt.FluentHttpClient.Abstracts</PackageId>
     <PackageTags>Bolt.FluentHttpClient.Abstracts;Bolt.FluentHttpClient;FluentHttpClient</PackageTags>
-    <Version>1.2.3</Version>
+    <Version>1.3.0</Version>
   </PropertyGroup>
 
 </Project>

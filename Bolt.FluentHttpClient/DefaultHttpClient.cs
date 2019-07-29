@@ -58,7 +58,7 @@ namespace Bolt.FluentHttpClient
 
                     request.OnSuccess = (r) =>
                     {
-                        var serializer = _serializers.FirstOrDefault(x => x.IsApplicable(Bolt.FluentHttpClient.Abstracts.Constants.ContentTypeJson));
+                        var serializer = _serializers.FirstOrDefault(x => x.IsApplicable(r.ContentType));
                         output = serializer.Deserialize<TOutput>(r.ContentStream);
 
                         return Task.CompletedTask;
@@ -84,7 +84,7 @@ namespace Bolt.FluentHttpClient
 
                 request.OnSuccess = (r) =>
                 {
-                    var serializer = _serializers.FirstOrDefault(x => x.IsApplicable(Bolt.FluentHttpClient.Abstracts.Constants.ContentTypeJson));
+                    var serializer = _serializers.FirstOrDefault(x => x.IsApplicable(r.ContentType));
                     output = serializer.Deserialize<TOutput>(r.ContentStream);
 
                     return Task.CompletedTask;

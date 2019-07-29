@@ -61,6 +61,7 @@ namespace Bolt.FluentHttpClient
                         using (var sr = await httpResponse.Content.ReadAsStreamAsync())
                         {
                             rsp.ContentStream = sr;
+                            rsp.StatusCode = httpResponse.StatusCode;
 
                             if (isSucceed)
                             {

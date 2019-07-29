@@ -24,6 +24,8 @@ namespace Bolt.FluentHttpClient
             var builder = sc.AddHttpClient(options.Name)
                .ConfigurePrimaryHttpMessageHandler(config => new HttpClientHandler
                {
+                   AllowAutoRedirect = false,
+                   UseCookies = false,
                    AutomaticDecompression = System.Net.DecompressionMethods.Deflate | System.Net.DecompressionMethods.GZip,
                    MaxConnectionsPerServer = 1024,
                })
